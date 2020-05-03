@@ -1,7 +1,7 @@
 <template>
     <div class="player" v-if="$store.state.show">
-        <div class="bottom_player" v-if="$store.state.music.songItem" @click="goDetail">
-            <div class="pic" >
+        <div class="bottom_player" v-if="$store.state.music.songItem">
+            <div class="pic" @click="goDetail">
                 <img :src="$store.state.music.songItem.picUrl">
             </div>
             <div class="songName">
@@ -23,7 +23,7 @@
             </div>
         </div>
         
-        <audio :src="$store.state.music.url" id="audio" autoplay></audio>
+        <audio :src="$store.state.music.url" id="audio" controls autoplay loop></audio>
         
     </div>
 </template>

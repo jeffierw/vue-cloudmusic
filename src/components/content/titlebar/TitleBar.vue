@@ -20,8 +20,8 @@ export default {
 
 <style scoped>
     .title-bar{
-        height: 43px;
-        line-height: 43px;
+        height: 44px;
+        line-height: 44px;
         display: flex;
         text-align: center;
     }

@@ -1,5 +1,5 @@
 <template>
-  <div id='playDetail'>
+  <div id='playDetail' >
       <div class="topbar">
         <title-bar-left/>
         <div style="margin-top:8px">
@@ -7,19 +7,20 @@
             <br/>
             <span class="singerName">{{$store.state.music.songItem.singerName}}</span>
         </div>
-        
-      </div>
-      
+      </div>  
+      <player-con></player-con>
   </div>
 </template>
 
 <script>
 import TitleBarLeft from 'components/content/titlebar/TitleBarLeft'
+import playerCon from './playerCon'
 export default {
     name: 'PlayDetail',
     components:{
-        TitleBarLeft
-    }
+        TitleBarLeft,
+        playerCon
+    },
 }
 </script>
 

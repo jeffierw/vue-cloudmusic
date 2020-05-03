@@ -25,7 +25,7 @@ export default {
     },
     created(){
         radioBanner().then(res=>{
-            console.log(res)
+            // console.log(res)
             this.banner = res.data.data
         })
     }

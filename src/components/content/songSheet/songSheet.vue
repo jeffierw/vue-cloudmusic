@@ -1,10 +1,12 @@
 <template>
     <div>
-        <div class="bgImage">
-            <div class='content' v-if="SongItem.length">
+        <div class="bgImage"  v-if="SongItem.length">
+            <div class='content' v-if="isRank">
+                <img :src="coverImage">
+            </div>
+            <div class="content" v-else>
                 <img :src="SongItem[0].picUrl">
             </div>
-            
             <div class="bar">
                 <div class="left" @click="goback()">
                     <img src="~assets/img/common/back_white.svg">
@@ -19,7 +21,9 @@
                 </div>
             </div>
             <div class="theme">
-                <img src="~assets/img/rank/upRank.png">
+                <!-- <img src="~assets/img/rank/upRank.png"> -->
+                <!-- <img :src="coverImage"> -->
+                
             </div>
         </div>
         <div class="bottom">
@@ -37,7 +41,7 @@
                         <p>{{index+1}}</p>
                     </div>
                     <div class="box_name">
-                        <div class="name_top">
+                        <div class="name_top" style="width=100px">
                             <p>{{attr.songName}}</p>
                             <p class="top_bottom">{{attr.alia==''?'':'('+attr.alia+')'}}</p>
                         </div>
@@ -52,15 +56,12 @@
 </template>
 
 <script>
-import {getSongsUrl} from 'network/rankItem'
+import {getSongsUrl,getSongItem} from 'network/rankItem'
 import {getSongSheet} from 'network/songSheet'
 import {mapActions,isShow,isPause} from 'vuex'
 
 export default {
-    name: 'FindItem',
-    components:{
-        
-    },
+    name: 'songSheet',
     data() {
         return {
             id: 0,
@@ -70,7 +71,9 @@ export default {
             picUrl: '', // 歌曲封面链接
             alia: '',
             zjName: '',
-            music: {}
+            music: {},
+            coverImage: '',
+            isRank: true
         }
     },
     methods: {
@@ -82,10 +85,10 @@ export default {
             getSongsUrl(id).then(res=>{
                 this.url = res.data.data[0].url
             })
-            // 设置延时执行否则第一次点击的时候拿不到歌曲链接
+            // 这里要设置延时执行否则第一次点击的时候拿不到歌曲链接
             setTimeout(()=>{
                 this.$store.dispatch('AddMusic',{url:this.url,songItem:this.SongItem[index],index:index}).then(res=>{
-                    console.log(res)
+                    this.$toast.show(res)
                 })
             },800)
             // 底部显示播放控件
@@ -99,21 +102,41 @@ export default {
     },
     created(){
         this.idx = this.$route.params.id;
-        console.log(this.$route)
-        // 1.获取歌曲列表数据
-        getSongSheet(this.idx).then(res=>{
-            for(var attr of res.data.playlist.tracks){
-                this.picUrl = attr.al.picUrl    // 图片封面
-                this.songName = attr.name       // 歌曲名称
-                this.alia = attr.alia[0]        // 歌曲名称后面对应的  xxx主题曲
-                this.id = attr.id               // 歌曲ID
-                this.singerName = attr.ar[0].name   // 歌手名称
-                this.zjName = attr.al.name            // 专辑名称
-                this.music = {picUrl: this.picUrl, songName: this.songName, alia: this.alia==null?'':this.alia,
-                              id: this.id, singerName: this.singerName, zjName: this.zjName}
-                this.SongItem.push(this.music)
-            }
-        })
+        // 获取歌曲列表数据
+        if(this.$route.name == '/rank/'){
+            getSongItem(this.idx).then(res=>{
+                for(var attr of res.data.playlist.tracks){
+                    this.picUrl = attr.al.picUrl    // 图片封面
+                    this.songName = attr.name       // 歌曲名称
+                    this.alia = attr.alia[0]        // 歌曲名称后面对应的  xxx主题曲
+                    this.id = attr.id               // 歌曲ID
+                    this.singerName = attr.ar[0].name   // 歌手名称
+                    this.zjName = attr.al.name            // 专辑名称
+                    this.music = {picUrl: this.picUrl, songName: this.songName, alia: this.alia==null?'':this.alia,
+                                id: this.id, singerName: this.singerName, zjName: this.zjName}
+                    this.SongItem.push(this.music)
+                }
+                this.coverImage = res.data.playlist.coverImgUrl
+
+            })
+            
+        }else if(this.$route.name == '/find/'){
+            this.isRank = false
+            getSongSheet(this.idx).then(res=>{
+                for(var attr of res.data.playlist.tracks){
+                    this.picUrl = attr.al.picUrl    // 图片封面
+                    this.songName = attr.name       // 歌曲名称
+                    this.alia = attr.alia[0]        // 歌曲名称后面对应的  xxx主题曲
+                    this.id = attr.id               // 歌曲ID
+                    this.singerName = attr.ar[0].name   // 歌手名称
+                    this.zjName = attr.al.name            // 专辑名称
+                    this.music = {picUrl: this.picUrl, songName: this.songName, alia: this.alia==null?'':this.alia,
+                                id: this.id, singerName: this.singerName, zjName: this.zjName}
+                    this.SongItem.push(this.music)
+                }
+            })
+        }
+       
     },
     
 }
@@ -131,6 +154,7 @@ export default {
     }
     .bgImage img{
         width: 100%;
+        margin-top: -17%;
     }
     .bar{
         position: absolute;
@@ -158,11 +182,13 @@ export default {
         width: 20px;
         height: 20px; 
     }
-    .theme img{
-        width: 125px;
-        height: 122px;
+    .theme{
         position:absolute;
         bottom: 85px;
+        margin-left: 10px;
+    }
+    .theme img{
+        width: 80px;   
     }
     .bottom{
         background-color: #F1EFF1;

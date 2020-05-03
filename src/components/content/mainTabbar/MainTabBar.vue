@@ -25,8 +25,8 @@ export default {
   },
   data() {
     return {
-      navbar_center: [ "我的","发现", "云村", "视频"],
-      path:['/profile','/find','/cloud_village','/video'],
+      navbar_center: [ "我的","发现","视频"],
+      path:['/profile','/find','/video'],
       isChoose: 1
     };
   },

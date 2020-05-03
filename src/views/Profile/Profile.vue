@@ -1,22 +1,22 @@
 <template>
     <div id="profile">
-        <!-- <profile-top/>
+        <profile-top/>
         <my-music/>
-        <my-info/> -->
-        我的
+        <my-info/>
     </div>
 </template>
 
 <script>
-// import ProfileTop from './childProfiles/ProfileTop'
-// import MyMusic from './childProfiles/MyMusic'
-// import MyInfo from './childProfiles/MyInfo'
+import ProfileTop from './childProfiles/ProfileTop'
+import MyMusic from './childProfiles/MyMusic'
+import MyInfo from './childProfiles/MyInfo'
+
 export default {
     name: 'Profile',
     components:{
-        // ProfileTop,
-        // MyMusic,
-        // MyInfo
+        ProfileTop,
+        MyMusic,
+        MyInfo
     }
 }
 </script>
